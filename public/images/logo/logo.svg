@@ -1,0 +1,90 @@
+<svg
+  width="220"
+  height="220"
+  viewBox="0 0 220 220"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-labelledby="logoTitle logoDesc"
+  role="img"
+>
+  <title id="logoTitle">Логотип платформы по изучению Unity</title>
+  <desc id="logoDesc">3D-куб с градиентом и академической шапочкой.</desc>
+  
+  <!-- Градиентный фон (круг) -->
+  <defs>
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#0e1128" />
+      <stop offset="100%" stop-color="#434343" />
+    </radialGradient>
+  </defs>
+  <circle cx="110" cy="110" r="110" fill="url(#bgGradient)" />
+  
+  <!-- Стилизация 3D-куба -->
+  <!-- Левая грань -->
+  <polygon
+    points="70,80 70,140 110,160 110,100"
+    fill="#ffffff"
+    opacity="0.9"
+  />
+  <!-- Правая грань -->
+  <polygon
+    points="110,100 110,160 150,140 150,80"
+    fill="#e0e0e0"
+    opacity="0.9"
+  />
+  <!-- Верхняя грань -->
+  <polygon
+    points="70,80 110,100 150,80 110,60"
+    fill="#d1d1d1"
+    opacity="0.9"
+  />
+
+  <!-- Тонкие тени (линии по рёбрам) -->
+  <polyline
+    points="70,80 110,60 150,80"
+    stroke="#444"
+    stroke-width="1"
+    fill="none"
+    opacity="0.4"
+  />
+  <polyline
+    points="70,80 70,140 110,160 110,100"
+    stroke="#444"
+    stroke-width="1"
+    fill="none"
+    opacity="0.4"
+  />
+  <polyline
+    points="150,80 150,140 110,160 110,100"
+    stroke="#444"
+    stroke-width="1"
+    fill="none"
+    opacity="0.4"
+  />
+
+  <!-- Академическая шапочка (стилизованная) -->
+  <!-- Плашка -->
+  <polygon
+    points="85,55 110,45 135,55 110,65"
+    fill="#ffcc00"
+  />
+  <!-- Кисточка -->
+  <line
+    x1="110" y1="45" x2="110" y2="55"
+    stroke="#ffcc00"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- Название платформы (текст) -->
+  <text
+    x="50%"
+    y="190"
+    fill="#ffffff"
+    font-family="Segoe UI, Arial, sans-serif"
+    font-size="22"
+    font-weight="600"
+    text-anchor="middle"
+  >
+    UnityLearn
+  </text>
+</svg>

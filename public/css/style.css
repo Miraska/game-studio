@@ -1,0 +1,549 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #000000;
+    text-decoration: none;
+}
+
+/* colors */
+
+.purple {
+    color: #9E5CF2;
+}
+
+
+/* main configurations */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1.6;
+
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+
+h3 {
+    font-weight: 500;
+}
+
+
+.fa-solid {
+    font-size: 36px;
+    color: #007BFF;
+}
+
+.fa-magnifying-glass {
+    color: black;
+    font-size: 24px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+
+/* Анимация плавного появления (пример) */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Шапка */
+.site-header {
+    background-color: #ffffffd6;
+    color: #1e1e1e;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    transition: background 0.3s;
+    padding: 20px 0;
+    border-bottom: #1e1e1e solid 0.5px;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.logo-img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+nav {
+    height: auto;
+}
+
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-menu {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.main-menu li a {
+    text-decoration: none;
+    color: #5b5b5b;
+    position: relative;
+    font-size: 16px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.horizontal-line {
+    width: 1px;
+    height: 40px;
+    background-color: gray;
+}
+
+.header-left li a {
+    text-decoration: none;
+    color: #5b5b5b;
+    position: relative;
+    font-size: 14px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.main-menu li a:hover {
+    color: #000000;
+    transform: scale(1.2);
+}
+
+.header-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+}
+
+.search input {
+    padding: 12px;
+    width: 200px;
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: #FAFAFA;
+}
+
+.search img {
+    position: relative;
+    left: -35px;
+    top: 4px;
+    width: 16px;
+    height: auto;
+}
+
+.profile {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.profile img {
+    width: 50px;
+}
+
+.profile li:last-child {
+    font-size: 14px;
+}
+
+/* Баннер */
+.banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-banner {
+    width: 50%;
+}
+
+.left-banner h2 {
+    font-weight: 400;
+}
+
+.left-banner h1 {
+    margin-bottom: 10px;
+}
+
+.left-banner a {
+    margin-top: 20px;
+}
+
+.left-banner img {
+    width: 200px;
+    position: relative;
+    top: 30px;
+    left: 30px;
+}
+
+/* Основной блок */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Кнопки */
+.btn-primary,
+.btn-secondary {
+    display: inline-block;
+    padding: 0.7rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+
+
+.arrow {
+    border: solid rgb(255, 255, 255);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.btn-primary {
+    background: #000000;
+}
+
+.btn-primary:hover {
+    background: #2a2a2a;
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background: #28a745;
+}
+
+.btn-secondary:hover {
+    background: #1e7e34;
+    transform: translateY(-3px);
+}
+
+
+/* Футер */
+.site-footer {
+    background: #252525;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* course (home) */
+.course-section {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.course-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.course-section div.search > input[type=text] {
+    width: 40%;
+    padding: 15px 0;
+    padding-left: 120px;
+}
+
+.btn-primary-categories {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    background-color: #000000;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    left: 110px;
+}
+
+.top-courses {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.filter-button {
+    border-radius: 8px;
+}
+
+.filter-selected {
+    padding: 8px 10px;
+    background-color: #F5F5F5;
+}
+
+/* cards */
+
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    gap: 30px;
+}
+
+.card {
+    padding: 20px;
+    background-color: #FAFAFA;
+    border-radius: 10px;
+    text-align: start;
+}
+
+.card-img {
+    border-radius: 10px;
+    margin-bottom: 30px;
+    height: 200px;
+    width: 300px;
+}
+
+.average-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.average-card-inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card .btn-primary {
+    margin-top: 10px;
+}
+
+
+/* Страница О нас */
+.about-container {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    line-height: 1.8;
+}
+
+/* Контакты */
+.form-contact {
+    max-width: 600px;
+    margin-top: 1rem;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.form-contact label {
+    display: block;
+    margin-top: 1rem;
+}
+
+.form-contact input,
+.form-contact textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: box-shadow 0.3s;
+}
+
+.form-contact input:focus,
+.form-contact textarea:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Список курсов */
+.courses-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.course-item {
+    flex: 1 1 calc(30% - 1rem);
+    background: #fff;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.course-item:hover {
+    transform: translateY(-5px);
+}
+
+.course-item h3 {
+    margin-bottom: 0.5rem;
+}
+
+.author {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    margin-bottom: 1rem;
+}
+
+/* Урок (lesson) */
+.lesson-container {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+}
+
+.lesson-container ul {
+    list-style: inside disc;
+    margin-top: 1rem;
+}
+
+/* Профиль */
+.profile-info,
+.profile-courses {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+/* Админ-панель и панель преподавателя */
+.admin-section,
+.instructor-section {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin-table th,
+.admin-table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+
+.admin-table th {
+    background: #f1f1f1;
+}
+
+/* Формы (логин, регистрация) */
+.form-auth {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    max-width: 400px;
+    margin: 1rem auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-auth label {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.form-auth input[type="text"],
+.form-auth input[type="email"],
+.form-auth input[type="password"] {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: box-shadow 0.3s;
+}
+
+.form-auth input[type="text"]:focus,
+.form-auth input[type="email"]:focus,
+.form-auth input[type="password"]:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.error-block {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+}
+
+.success-msg {
+    background: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+}
