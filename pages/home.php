@@ -1,5 +1,20 @@
 <?php
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+$filters = [];
+if (isset($_GET['level'])) {
+  $filters['level'] = $_GET['level'];
+}
+if (isset($_GET['search'])) {
+  $filters['search'] = $_GET['search'];
+}
+
+$courses = getCourses($pdo, $filters);
+$newCourses = array_slice($courses, 0, 4);
+$topCourses = array_slice($courses, 0, 2);
 ?>
+
 <div class="container">
   <div class="banner">
     <div class="left-banner">
@@ -18,7 +33,6 @@
 <section class="course-section" id="catalog">
   <h2>Найди подходящий курс среди <br><span class="purple">150 предоженных курсов!</span></h2>
   <div class="search">
-    <button class="categories btn-primary-categories">Категории</button>
     <input type="text" placeholder="поиск">
     <span>или глянь курсы ниже в каталоге</span>
   </div>
@@ -35,57 +49,29 @@
   </div>
 
   <div class="cards">
-    <div class="card">
-      <img src="images/courses/1.png" alt="course" class="card-img img">
-
-      <div class="average-card">
-        <h4>Изучение unity - junior </h4>
-
-        <div class="average-card-inner">
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/book.png" alt="icon">
-            <span>Урок : 6</span>
-          </div>
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/user_small.png" alt="icon">
-            <span>Рейтинг</span>
-          </div>
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/rating.png" alt="icon">
-            <span>начинающий</span>
-          </div>
-        </div>
-      </div>
-
-      <a href="index.php?page=lesson" class="btn-primary">Вперед <i class="arrow right"></i></a>
-    </div>
-
-
-
-    <div class="card">
-      <img src="images/courses/2.jpeg" alt="course" class="card-img img">
-
-      <div class="average-card">
-        <h4>Изучение unity - middle </h4>
-
-        <div class="average-card-inner">
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/book.png" alt="icon">
-            <span>Урок : 8</span>
-          </div>
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/user_small.png" alt="icon">
-            <span>Рейтинг</span>
-          </div>
-          <div class="icon-text-average-card-inner">
-            <img src="images/icons/rating.png" alt="icon">
-            <span>начинающий</span>
+    <?php foreach ($topCourses as $course): ?>
+      <div class="card">
+        <img src="images/courses/<?= escape($course['image_path']) ?>" alt="<?= escape($course['title']) ?>" class="card-img img">
+        <div class="average-card">
+          <h4><?= escape($course['title']) ?></h4>
+          <div class="average-card-inner">
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/book.png" alt="icon">
+              <span>Урок : <?= $course['lessons_count'] ?></span>
+            </div>
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/user_small.png" alt="icon">
+              <span>Рейтинг</span>
+            </div>
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/rating.png" alt="icon">
+              <span><?= escape($course['level']) ?></span>
+            </div>
           </div>
         </div>
+        <a href="index.php?page=lesson&id=<?= $course['id'] ?>" class="btn-primary">Вперед <i class="arrow right"></i></a>
       </div>
-
-      <a href="index.php?page=lesson" class="btn-primary">Вперед <i class="arrow right"></i></a>
-    </div>
+    <?php endforeach; ?>
   </div>
 </section>
 

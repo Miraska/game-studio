@@ -364,9 +364,9 @@ main {
 }
 
 .course-section div.search > input[type=text] {
-    width: 40%;
+    width: 30%;
     padding: 15px 0;
-    padding-left: 120px;
+    padding-left: 20px;
 }
 
 .btn-primary-categories {
