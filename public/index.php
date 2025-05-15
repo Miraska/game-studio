@@ -4,7 +4,6 @@ session_start();
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-// Определяем, какую страницу загружать
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 $pageFile = __DIR__ . '/../pages/' . $page . '.php';
 if (!file_exists($pageFile)) {
@@ -28,7 +27,6 @@ if (!file_exists($pageFile)) {
 
 <body>
     <div class="wrapper">
-        <!-- Шапка -->
         <?php
         if ($page === 'profile' || $page === 'profile_admin') {
             require_once "../includes/header_profile.php";
@@ -38,11 +36,9 @@ if (!file_exists($pageFile)) {
 
         ?>
 
-        <!-- Основной контент -->
         <main>
             <?php include $pageFile; ?>
         </main>
-        <!-- Футер -->
         <?php require_once "../includes/footer.php" ?>
     </div>
 

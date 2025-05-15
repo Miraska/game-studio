@@ -1,5 +1,4 @@
 <?php
-// Файл: pages/profile.php
 // if (!isLoggedIn()) {
 //     echo "<p>Для просмотра профиля требуется авторизация.</p>";
 //     return;

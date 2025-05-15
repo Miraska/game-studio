@@ -1,5 +1,4 @@
 <?php
-// Файл: pages/home.php
 ?>
 <div class="container">
   <div class="banner">

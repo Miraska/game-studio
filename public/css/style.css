@@ -301,6 +301,9 @@ main {
     transition: background 0.3s, transform 0.3s;
 }
 
+.btn {
+    color: rgb(55, 182, 255);
+}
 
 
 .arrow {

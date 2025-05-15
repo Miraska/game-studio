@@ -41,9 +41,7 @@ $reviews = [
   ],
 ];
 ?>
-<!-- =================== COURSE BLOCK =================== -->
 <section class="lesson-section">
-  <!-- ---------- slider ---------- -->
   <div class="slider-wrapper">
     <div class="slider" id="courseSlider">
       <?php foreach ($course['slides'] as $i => $src): ?>
@@ -60,7 +58,6 @@ $reviews = [
     </div>
   </div>
 
-  <!-- ---------- info ---------- -->
   <div class="info">
     <div class="top-info">
       <h1><?= htmlspecialchars($course['title']) ?></h1>
@@ -86,7 +83,6 @@ $reviews = [
 
 <hr>
 
-<!-- =================== REVIEWS BLOCK =================== -->
 <section class="reviews-section">
   <div class="reviews-top">
     <div class="reviews-title">Отзывы Студентов</div>
@@ -113,9 +109,7 @@ $reviews = [
   <a href="#" class="btn-secondary">оставить отзыв</a>
 </section>
 
-<!-- =================== JS =================== -->
 <script>
-  /* ---------- Course slider ---------- */
   (function() {
     const slider = document.getElementById('courseSlider');
     const slides = slider.querySelectorAll('.slide');
@@ -145,17 +139,16 @@ $reviews = [
     reset();
   })();
 
-  /* ---------- Reviews slider ---------- */
   (function() {
     const track = document.getElementById('reviewsTrack');
     const prev = document.getElementById('revPrev');
     const next = document.getElementById('revNext');
     const cards = track.children;
     let current = 0;
-    const gap = 24; // Gap between cards
+    const gap = 24;
 
     function update() {
-      const cardWidth = cards[0].offsetWidth + gap; // Dynamic width including gap
+      const cardWidth = cards[0].offsetWidth + gap;
       track.style.transform = `translateX(-${current * cardWidth}px)`;
     }
 
@@ -166,17 +159,16 @@ $reviews = [
     }
 
     prev.addEventListener('click', () => {
-      current = Math.max(0, current - 1); // Move back by one card
+      current = Math.max(0, current - 1);
       update();
     });
 
     next.addEventListener('click', () => {
       const visible = getVisibleCards();
-      current = Math.min(cards.length - 1 - visible, current + 1); // Move forward by one card
+      current = Math.min(cards.length - 1 - visible, current + 1);
       update();
     });
 
-    // Update slider on window resize for adaptability
     window.addEventListener('resize', update);
     update();
   })();

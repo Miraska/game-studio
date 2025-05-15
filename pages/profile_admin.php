@@ -9,7 +9,6 @@
 ?>
 
 <section class="profile-section">
-    <!-- Modal Container -->
     <div id="addProductModal" class="modal">
         <div class="modal-content">
             <div class="modal-content-top">
@@ -93,7 +92,6 @@
         <h1>Админ панель</h1>
 
         <div class="tables">
-            <!-- Управление курсами -->
             <h2>Управление курсами</h2>
             <div class="table-container">
 
@@ -125,7 +123,6 @@
             <button class="btn-primary" onclick="openModal('addProductModal')">добавить курс</button>
 
 
-            <!-- Управление пользователями -->
             <h2 class="mt-2">Управление пользователями</h2>
             <div class="table-container">
                 <table>
@@ -157,7 +154,6 @@
                 </table>
             </div>
 
-            <!-- Управление заказами -->
             <h2 class="mt-2">Управление заказами</h2>
             <div class="table-container">
                 <table>
