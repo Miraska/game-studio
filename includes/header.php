@@ -1,6 +1,72 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/functions.php';
+
+if (isset($_SESSION['errors'])) {
+    echo '<div class="errors">';
+    foreach ($_SESSION['errors'] as $error) {
+        echo "<p>$error</p>";
+    }
+    echo '</div>';
+    unset($_SESSION['errors']);
+}
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="success">' . $_SESSION['success_message'] . '</div>';
+    unset($_SESSION['success_message']);
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signinForm'])) {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    $isLogined = loginUser($pdo, $email, $password);
+
+    if (isAdmin()) {
+        header("Location: index.php?page=profile_admin");
+        exit();
+    }
+
+    if ($isLogined) {
+        header("Location: index.php?page=profile");
+        exit();
+    } else {
+        $_SESSION['errors'][] = "Неверный email или пароль.";
+        header("Location: index.php?page=home");
+        exit();
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signupForm'])) {
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($password !== $confirm_password) {
+        $_SESSION['errors'][] = "Пароли не совпадают.";
+    } elseif (strlen($password) < 6) {
+        $_SESSION['errors'][] = "Пароль должен содержать минимум 6 символов.";
+    } else {
+        if (registerUser($pdo, $username, $email, $password)) {
+            $_SESSION['success_message'] = "Регистрация прошла успешно! Войдите в систему.";
+            header("Location: index.php?page=home");
+            exit();
+        }
+    }
+    header("Location: index.php?page=home");
+    exit();
+}
+
 ?>
+
+<?php
+$user = null;
+if (isLoggedIn()) {
+    $user = getCurrentUser($pdo);
+}
+?>
+
 <header class="site-header">
     <div id="signinModal" class="modal">
         <div class="modal-content">
@@ -8,14 +74,14 @@ require_once __DIR__ . '/db.php';
                 <h2>Войти</h2>
                 <span class="close"></span>
             </div>
-
-            <form id="signinForm" method="post" enctype="multipart/form-data">
-                <input type="email" name="email" placeholder="Почта">
-                <input type="password" name="price" placeholder="Пароль" step="0.01">
-                <button type="submit">Войти</button>
+            <form id="signinForm" name="signinForm" method="post" action="header.php">
+                <input type="email" name="email" placeholder="Почта" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <button type="submit" name="signinForm">Войти</button>
                 <div>
                     <span class="span">
-                        <div>Нет аккаунта?</div> <button class="default-button" onclick="openModal('signupModal')" type="button">Зарегистрируйтесь</button>
+                        <div>Нет аккаунта?</div>
+                        <button class="default-button" onclick="openModal('signupModal')" type="button">Зарегистрируйтесь</button>
                     </span>
                 </div>
             </form>
@@ -28,15 +94,16 @@ require_once __DIR__ . '/db.php';
                 <h2>Зарегистрироваться</h2>
                 <span class="close"></span>
             </div>
-
-            <form id="signupForm" method="post" enctype="multipart/form-data">
-                <input type="text" name="name" placeholder="Имя">
-                <input type="email" name="email" placeholder="Почта">
-                <input type="password" name="price" placeholder="Пароль" step="0.01">
-                <button type="submit">Зарегистрироваться</button>
+            <form id="signupForm" method="post" action="index.php">
+                <input type="text" name="username" placeholder="Имя пользователя" required>
+                <input type="email" name="email" placeholder="Почта" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+                <input type="password" name="confirm_password" placeholder="Подтвердите пароль" required>
+                <button type="submit" name="signupForm">Зарегистрироваться</button>
                 <div>
                     <span class="span">
-                        <div>Есть аккаунт?</div> <button class="default-button" onclick="openModal('signinModal')" type="button">Войдите</button>
+                        <div>Есть аккаунт?</div>
+                        <button class="default-button" onclick="openModal('signinModal')" type="button">Войдите</button>
                     </span>
                 </div>
             </form>
@@ -73,19 +140,19 @@ require_once __DIR__ . '/db.php';
 
                 <div class="main-menu main-menu-right">
                     <div>
-                        <?php if (isLoggedIn()): ?>
+                        <?php if (isLoggedIn() && $user): ?>
                             <a href="index.php?page=profile" class="profile">
                                 <img src="images/icons/user.png" alt="">
                                 <div>
-                                    <li>Пользователь</li>
-                                    <li>Описание</li>
+                                    <li><?= htmlspecialchars($user['username']) ?></li>
+                                    <li><?= htmlspecialchars($user['role']) ?></li>
                                 </div>
                             </a>
-
                         <?php else: ?>
                             <li><button class="default-button" onclick="openModal('signinModal')">Вход</button></li>
                             <li><button class="default-button" onclick="openModal('signupModal')">Регистрация</button></li>
                         <?php endif; ?>
+
                     </div>
 
                 </div>
@@ -100,26 +167,29 @@ require_once __DIR__ . '/db.php';
             <div class="burger-menu">
                 <ul class="nav-inner">
                     <div class="main-menu main-menu-right">
-                        <?php if (isLoggedIn()): ?>
+                        <?php if (isLoggedIn() && $user): ?>
                             <a href="index.php?page=profile" class="profile">
                                 <img src="images/icons/user.png" alt="">
                                 <div>
-                                    <li>Пользователь</li>
-                                    <li>Описание</li>
+                                    <li><?= htmlspecialchars($user['username']) ?></li>
+                                    <li><?= htmlspecialchars($user['role']) ?></li>
                                 </div>
                             </a>
-
                         <?php else: ?>
                             <li><button class="default-button" onclick="openModal('signinModal')">Вход</button></li>
                             <li><button class="default-button" onclick="openModal('signupModal')">Регистрация</button></li>
                         <?php endif; ?>
+
                     </div>
-                    <div class="search">
-                        <input type="text" name="search" id="" placeholder="поиск...">
-                        <a href="">
+                    <form id="header-search-form" method="get" action="index.php" autocomplete="off">
+                        <input type="hidden" name="page" value="home">
+                        <input type="text" name="search" id="searchInput" placeholder="поиск..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" autocomplete="off">
+                        <div id="search-hints" style="background:#fff; border:1px solid #ccc; display:none; position:absolute; z-index:999; width:100%;"></div>
+                        <button type="submit" style="background:none; border:none;">
                             <img src="images/icons/search.png" alt="">
-                        </a>
-                    </div>
+                        </button>
+                    </form>
+
                     <div class="main-menu main-menu-left">
                         <li><a href="#catalog">Каталог</a></li>
                         <li><a href="#about-us">О нас</a></li>
@@ -129,108 +199,3 @@ require_once __DIR__ . '/db.php';
 
         </div>
 </header>
-
-<script>
-    let modal;
-    var span = document.getElementsByClassName("close");
-    const burgerButton = document.getElementById("burger-button");
-    const navMenus = document.querySelectorAll(".nav-inner li a");
-    const buttonMenus = document.querySelectorAll(".main-menu-right li button");
-
-    for (let i = 0; i < navMenus.length; i++) {
-        navMenus[i].addEventListener("click", function() {
-            burgerButton.classList.remove("active-burger");
-            document.querySelector(".burger-menu").classList.remove("active-burger-menu");
-            burgerButton.style.transform = "rotate(0deg)";
-            burgerButton.style.transition = "0.5s";
-            enableScrolling();
-        });
-    }
-
-    for (let i = 0; i < buttonMenus.length; i++) {
-        buttonMenus[i].addEventListener("click", function() {
-            burgerButton.classList.remove("active-burger");
-            document.querySelector(".burger-menu").classList.remove("active-burger-menu");
-            burgerButton.style.transform = "rotate(0deg)";
-            burgerButton.style.transition = "0.5s";
-            enableScrolling();
-        });
-    }
-
-    burgerButton.addEventListener("click", function() {
-        burgerButton.classList.toggle("active-burger");
-
-        document.querySelector(".burger-menu").classList.toggle("active-burger-menu");
-        document.querySelector(".burger-menu").style.transition = "0.5s";
-
-
-
-
-        if (burgerButton.classList.contains("active-burger")) {
-            burgerButton.style.transform = "rotate(90deg)";
-            burgerButton.style.transition = "0.5s";
-            disableScrolling();
-
-        } else {
-            burgerButton.style.transform = "rotate(0deg)";
-            burgerButton.style.transition = "0.5s";
-            enableScrolling();
-        }
-    });
-
-    function openModal(nameOfModal) {
-        modals = document.getElementsByClassName('modal');
-        for (let i = 0; i < modals.length; i++) {
-            modals[i].style.display = "none";
-        }
-        modal = document.getElementById(nameOfModal);
-        modal.style.display = "block";
-        disableScrolling();
-
-    }
-
-
-    for (let i = 0; i < span.length; i++) {
-        span[i].onclick = function() {
-            modal.style.display = "none";
-            enableScrolling();
-        }
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-            enableScrolling();
-        }
-    }
-
-    function disableScrolling() {
-        document.body.style.overflow = "hidden";
-    }
-
-    function enableScrolling() {
-        document.body.style.overflow = "auto";
-    }
-
-    document.getElementById("addProductForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        fetch("add_product.php", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Товар успешно добавлен!");
-                    modal.style.display = "none";
-                } else {
-                    alert("Ошибка при добавлении товара: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Ошибка:", error);
-                alert("Произошла ошибка при отправке данных.");
-            });
-    });
-</script>

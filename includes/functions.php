@@ -2,31 +2,24 @@
 require_once __DIR__ . '/db.php';
 
 // Регистрация пользователя
-function registerUser($pdo, $username, $email, $password, $role = 'student')
-{
-    // Проверка на существование пользователя
+function registerUser($pdo, $username, $email, $password, $role = 'student') {
     $sql = "SELECT COUNT(*) FROM users WHERE username = :username OR email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['username' => $username, 'email' => $email]);
-
     if ($stmt->fetchColumn() > 0) {
-        return "Пользователь с таким именем или email уже существует.";
+        $_SESSION['errors'][] = "Пользователь с таким именем или email уже существует.";
+        return false;
     }
 
-    // Хеширование пароля
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    // Создание пользователя
+    $hashedPassword = $password;
     $sql = "INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
+    return $stmt->execute([
         'username' => $username,
-        'email'    => $email,
+        'email' => $email,
         'password' => $hashedPassword,
-        'role'     => $role
+        'role' => $role
     ]);
-
-    return true;
 }
 
 // Добавить в includes/functions.php
@@ -40,14 +33,13 @@ function getUserById($pdo, $id)
 
 // Авторизация пользователя
 // Исправление функции в includes/functions.php
-function loginUser($pdo, $email, $password)
-{
+function loginUser($pdo, $email, $password) {
     $sql = "SELECT * FROM users WHERE email = :email AND is_active = TRUE";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user && $password == $user['password']) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
@@ -64,11 +56,7 @@ function logoutUser()
     session_destroy();
 }
 
-// Проверка авторизации
-function isLoggedIn()
-{
-    return isset($_SESSION['user_id']);
-}
+
 
 // Получение текущего пользователя
 function getCurrentUser($pdo)
@@ -82,17 +70,35 @@ function getCurrentUser($pdo)
 }
 
 // Проверка роли
-function isAdmin()
-{
+function isAdmin() {
     return isLoggedIn() && $_SESSION['role'] === 'admin';
 }
 
-function isInstructor()
-{
+function isInstructor() {
     return isLoggedIn() && $_SESSION['role'] === 'instructor';
 }
 
+function isLoggedIn() {
+    return isset($_SESSION['user_id']);
+}
+
 // Получение курсов
+
+function getCoursesBySearch($pdo, $query) {
+    $sql = "SELECT * FROM courses WHERE title LIKE :q OR description LIKE :q ORDER BY title";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['q' => '%' . $query . '%']);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getCourseById($pdo, $id) {
+    $sql = "SELECT * FROM courses WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
 function getCourses($pdo, $filters = [])
 {
     $where = [];
@@ -116,14 +122,22 @@ function getCourses($pdo, $filters = [])
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Получение курса по ID
-function getCourseById($pdo, $id)
-{
-    $sql = "SELECT * FROM courses WHERE id = :id";
+function updateReview($pdo, $id, $rating, $comment) {
+    $sql = "UPDATE reviews SET rating = :rating, comment = :comment WHERE id = :id";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id' => $id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    return $stmt->execute([
+        'id' => $id,
+        'rating' => $rating,
+        'comment' => $comment
+    ]);
 }
+
+function deleteReview($pdo, $id) {
+    $sql = "DELETE FROM reviews WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    return $stmt->execute(['id' => $id]);
+}
+
 
 // Получение уроков курса
 function getLessonsByCourse($pdo, $course_id)
@@ -207,7 +221,7 @@ function updateUser($pdo, $id, $data)
 
     if (!empty($data['password'])) {
         $set[] = "password = :password";
-        $params['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        $params['password'] = $data['password'];
     }
 
     if (empty($set)) return false;
@@ -323,3 +337,4 @@ function getCourseReviews($pdo, $course_id)
     $stmt->execute(['course_id' => $course_id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+?>

@@ -6,10 +6,6 @@ $filters = [];
 if (isset($_GET['level'])) {
   $filters['level'] = $_GET['level'];
 }
-if (isset($_GET['search'])) {
-  $filters['search'] = $_GET['search'];
-}
-
 $courses = getCourses($pdo, $filters);
 $newCourses = array_slice($courses, 0, 4);
 $topCourses = array_slice($courses, 0, 2);
@@ -33,9 +29,10 @@ $topCourses = array_slice($courses, 0, 2);
 <section class="course-section" id="catalog">
   <h2>Найди подходящий курс среди <br><span class="purple">150 предоженных курсов!</span></h2>
   <div class="search">
-    <input type="text" placeholder="поиск">
+    <input type="text" id="catalog-search" placeholder="поиск">
     <span>или глянь курсы ниже в каталоге</span>
   </div>
+
   <div class="new-courses">
     <h3><span class="purple">•</span> НОВЫЕ КУРСЫ</h3>
     <div class="filter">
@@ -48,8 +45,8 @@ $topCourses = array_slice($courses, 0, 2);
     </div>
   </div>
 
-  <div class="cards">
-    <?php foreach ($topCourses as $course): ?>
+  <div class="cards" id="catalog-cards">
+    <?php foreach ($courses as $course): ?>
       <div class="card">
         <img src="images/courses/<?= escape($course['image_path']) ?>" alt="<?= escape($course['title']) ?>" class="card-img img">
         <div class="average-card">
@@ -72,6 +69,8 @@ $topCourses = array_slice($courses, 0, 2);
         <a href="index.php?page=lesson&id=<?= $course['id'] ?>" class="btn-primary">Вперед <i class="arrow right"></i></a>
       </div>
     <?php endforeach; ?>
+  </div>
+
   </div>
 </section>
 
@@ -223,53 +222,50 @@ $topCourses = array_slice($courses, 0, 2);
 </section>
 
 <script>
-  var acc = document.getElementsByClassName("accordion");
-  var i;
+  document.addEventListener('DOMContentLoaded', function() {
+    // Каталог фильтр
+    const searchInput = document.getElementById('catalog-search');
+    const cardsContainer = document.getElementById('catalog-cards');
 
-  for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-      this.classList.toggle("active");
-      var panel = this.nextElementSibling;
-      if (panel.style.maxHeight) {
-        panel.style.maxHeight = null;
-      } else {
-        panel.style.maxHeight = panel.scrollHeight + "px";
-      }
-    });
-  }
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const query = searchInput.value.trim();
 
-
-  (function() {
-    const track = document.getElementById('courseTrack');
-    const prev = document.getElementById('coursePrev');
-    const next = document.getElementById('courseNext');
-    const cards = track.children;
-    let current = 0;
-    const gap = 24;
-
-    function update() {
-      const cardWidth = cards[0].offsetWidth + gap;
-      track.style.transform = `translateX(-${current * cardWidth}px)`;
+        fetch('index.php?api=search_courses&q=' + encodeURIComponent(query))
+          .then(r => r.json())
+          .then(data => {
+            let html = '';
+            if (data.length === 0) {
+              html = '<div style="padding:20px; text-align:center; color:#9e5cf2;">Ничего не найдено</div>';
+            } else {
+              data.forEach(course => {
+                html += `
+      <div class="card">
+        <img src="images/courses/${course.image_path}" alt="${course.title}" class="card-img img">
+        <div class="average-card">
+          <h4>${course.title}</h4>
+          <div class="average-card-inner">
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/book.png" alt="icon">
+              <span>Урок : ${course.lessons_count}</span>
+            </div>
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/user_small.png" alt="icon">
+              <span>Рейтинг</span>
+            </div>
+            <div class="icon-text-average-card-inner">
+              <img src="images/icons/rating.png" alt="icon">
+              <span>${course.level}</span>
+            </div>
+          </div>
+        </div>
+        <a href="index.php?page=lesson&id=${course.id}" class="btn-primary">Вперед <i class="arrow right"></i></a>
+      </div>`;
+              });
+            }
+            cardsContainer.innerHTML = html;
+          });
+      });
     }
-
-    function getVisibleCards() {
-      const wrapperWidth = document.querySelector('.reviews-wrapper').offsetWidth;
-      const cardWidth = cards[0].offsetWidth + gap;
-      return Math.floor(wrapperWidth / cardWidth);
-    }
-
-    prev.addEventListener('click', () => {
-      current = Math.max(0, current - 1);
-      update();
-    });
-
-    next.addEventListener('click', () => {
-      const visible = getVisibleCards();
-      current = Math.min(cards.length - 1 - visible, current + 1);
-      update();
-    });
-
-    window.addEventListener('resize', update);
-    update();
-  })();
+  });
 </script>

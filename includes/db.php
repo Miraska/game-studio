@@ -1,5 +1,4 @@
 <?php
-// session_start();
 
 $db   = 'gamestudio';   // Имя базы данных
 $user = 'root';         // Логин к MySQL

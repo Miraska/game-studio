@@ -13,7 +13,7 @@ require_once __DIR__ . '/db.php';
             </div>
 
             <div class="header-right-profile">
-                <a href="?page=home">вернуться назад ></a>                
+                <a href="logout.php">выйти ></a>                
             </div>
         </div>
 
